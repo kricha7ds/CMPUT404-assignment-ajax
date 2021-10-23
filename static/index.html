@@ -40,6 +40,8 @@ function sendJSONXMLHTTPRequest(url, objects, callback) {
                 if (xhr.status==200) {
                     //XXX: parse some JSON from the request!
                     //XXX: Pass the data to the callback!
+                    jsonResponse = JSON.parse(xhr.response); // no snake_case :D
+                    callback(jsonResponse);
                 }
             } 
             catch(e) {
@@ -47,9 +49,17 @@ function sendJSONXMLHTTPRequest(url, objects, callback) {
             }
         }
     };
-    //XXX: POST to a URL
+    //XXX: POST to a URL 
     //XXX: set the mimetype and the accept headers!
     // Remember to use application/json !
+
+    // Reference: https://www.w3schools.com/js/js_ajax_http_send.asp
+    xhr.open('POST', url, true); // do not use async = false!!!
+    // Reference: https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/setRequestHeader
+    // add after open(), before send
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.setRequestHeader('Accept', 'application/json');
+    xhr.send(JSON.stringify(objects));
 }
 
 
