@@ -19,10 +19,8 @@
 #
 # remember to:
 #     pip install flask
-
-
-import flask
-from flask import Flask, request, redirect
+from flask import Flask, request, redirect, Response
+from http import HTTPStatus
 import json
 app = Flask(__name__)
 app.debug = True
@@ -79,7 +77,9 @@ def hello():
 @app.route("/entity/<entity>", methods=['POST','PUT'])
 def update(entity):
     '''update the entities via this interface'''
-    return None
+    body = flask_post_json() # get the raw body/data of a POST in flask ..
+    myWorld.set(entity, body)
+    return Response(json.dumps(body), status=HTTPStatus.OK, mimetype='application/json') # https://docs.python.org/3/library/http.html
 
 @app.route("/world", methods=['POST','GET'])    
 def world():
