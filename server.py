@@ -19,10 +19,8 @@
 #
 # remember to:
 #     pip install flask
-
-
-import flask
-from flask import Flask, request
+from flask import Flask, request, redirect, Response
+from http import HTTPStatus
 import json
 app = Flask(__name__)
 app.debug = True
@@ -71,30 +69,38 @@ def flask_post_json():
     else:
         return json.loads(request.form.keys()[0])
 
+"""
+use JSON to communicate 
+"""
+
 @app.route("/")
 def hello():
     '''Return something coherent here.. perhaps redirect to /static/index.html '''
-    return None
+    return redirect('/static/index.html')
 
 @app.route("/entity/<entity>", methods=['POST','PUT'])
 def update(entity):
     '''update the entities via this interface'''
-    return None
+    body = flask_post_json() # get the raw body/data of a POST in flask ..
+    myWorld.set(entity, body)
+    return Response(json.dumps(body), status=HTTPStatus.OK, mimetype='application/json') # https://docs.python.org/3/library/http.html
 
 @app.route("/world", methods=['POST','GET'])    
 def world():
     '''you should probably return the world here'''
-    return None
+    return Response(json.dumps(myWorld.world()), status=HTTPStatus.OK, mimetype='application/json') # https://docs.python.org/3/library/http.html
 
 @app.route("/entity/<entity>")    
 def get_entity(entity):
     '''This is the GET version of the entity interface, return a representation of the entity'''
-    return None
+    return Response(json.dumps(myWorld.get(entity)), status=HTTPStatus.OK, mimetype='application/json') # https://docs.python.org/3/library/http.html
 
 @app.route("/clear", methods=['POST','GET'])
 def clear():
     '''Clear the world out!'''
-    return None
+    myWorld.clear()
+    # return cleared state of the world?
+    return Response(json.dumps(myWorld.world()), status=HTTPStatus.OK, mimetype='application/json') # https://docs.python.org/3/library/http.html
 
 if __name__ == "__main__":
     app.run()
