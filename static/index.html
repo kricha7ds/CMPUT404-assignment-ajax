@@ -73,13 +73,16 @@ function drawCircle(context,entity) {
         lineWidth = 5;
         var x = entity["x"];
         var y = entity["y"];
-        //moveTo(x,y);
+        moveTo(x,y);
         // fillStyle = entity["colour"];
         strokeStyle = 'rebeccapurple';
         // strokeStyle = '#09f';
         lineCap = 'butt';
         
         arc(x, y, (entity["radius"])?entity["radius"]:50, 0, 2.0 * Math.PI, false);  
+
+        // cool 3d-like effect, even though we're using a 2D context!
+        context.bezierCurveTo(800, 200, 1200, 700, 1200, 400);
         stroke();                                
     }
 }
@@ -273,7 +276,7 @@ mouse.mouseuppers.push(function(x,y,clicked,e) {
 
 mouse.mousedraggers.push(function(x,y,clicked,e) {
     addEntityWithoutName({'x':x,'y':y,'colour':'cyan',
-                          'radius':20});
+                          'radius':10});
 });
 
 
